@@ -34,12 +34,13 @@ ORDER BY price desc;
 
 -- show a statistic about the item prices
 --1.
-SELECT item_name, max(price) as max_price
+SELECT MAX(price) AS max_price
 FROM superstore;
+
 --2.
-SELECT item_name, sum (price)
+SELECT category, SUM(price) AS total_price
 FROM superstore
-GROUP BY item_name
+GROUP BY category;
 
 -- a statistic about the price for items in the category of "Kitchen Supplies".
  

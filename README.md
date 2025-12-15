@@ -1,27 +1,60 @@
-# Superstore SQL Mini Project
+# 📊 Data Analytics Projects
 
-## Project Overview
-This is a beginner-friendly SQL mini project created to practice basic SQL concepts such as table creation, data insertion, filtering, ordering, and aggregation.
+Welcome to my GitHub repository! 👋
+This repository contains my data analytics learning projects as I build skills in SQL and related tools.
 
-## Dataset
-The dataset represents a fictional superstore with product details such as:
-- Item name
-- Category
-- Price
-- Stock quantity
-- Average rating
+---
 
-## Skills Used
-- SQL
-- CREATE TABLE
-- INSERT INTO
-- SELECT
-- WHERE
-- ORDER BY
-- Aggregation functions (SUM, MAX)
+## 👩‍💻 About Me
 
-## Files
-- superstore.sql : Contains table creation, data insertion, and SQL queries
+Hi, I’m **Janani**. I have a Master’s degree in Electronics and am currently transitioning into data analytics. I’m learning SQL and building small projects to strengthen my analytical skills and prepare for entry-level data analyst roles.
 
-## Author
-Janani Balasubramani
+---
+
+## 🧠 Skills (In Progress)
+
+* SQL (Beginner)
+* Data Analytics Fundamentals
+* Data Filtering & Aggregation
+* Problem Solving
+
+---
+
+## 📁 Repository Structure
+
+Each folder in this repository represents an individual project.
+
+Example:
+
+```
+project-name/
+│── README.md        # Project-specific explanation
+│── queries.sql      # SQL queries used in the project
+│── dataset.sql      # Table creation & sample data
+```
+
+---
+
+## 📌 Projects
+
+### 1️⃣ Superstore SQL Mini Project
+
+* Created a retail-style dataset
+* Used `SELECT`, `WHERE`, `ORDER BY`, `GROUP BY`, and aggregation functions
+* Analyzed product prices and categories
+
+(More projects will be added soon 🚀)
+
+---
+
+## 🎯 Goal
+
+To become job-ready for an **Entry-Level Data Analyst** role by building hands-on projects and a strong SQL foundation.
+
+---
+
+## 📬 Connect
+
+* LinkedIn: *(add link later)*
+
+Thanks for visiting! 🌱

@@ -49,5 +49,14 @@ FROM FebSales F
 LEFT JOIN customers C
 ON F.orderID = C.order_id
 WHERE F.Quantity >2 AND length(orderid) = 6
-AND orderid <> 'Order ID'
+AND orderid <> 'Order ID';
 
+--8. find the total quantity of product sold in february 18th.
+SELECT sum(quantity)
+FROM BIT_DB.FebSales
+WHERE orderdate like '02/18/19%';
+
+--9. find the total quantity of product sold from 02/13/19 to 02/18/19.
+SELECT orderdate
+FROM BIT_DB.FebSales
+WHERE orderdate between '02/13/19 00:00' AND '02/18/19 00:00';

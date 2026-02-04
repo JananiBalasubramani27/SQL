@@ -1,12 +1,14 @@
 #In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data.
 
 --1.How many many unique orders were placed in January? In other words, how many distinct order ids do we have?
+
 SELECT COUNT(DISTINCT orderid)
 FROM BIT_DB.JanSales
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID';
 
 --2. How many of those orders were for an iPhone?
+
 SELECT COUNT(DISTINCT orderid)
 FROM BIT_DB.JanSales
 WHERE Product='iPhone'
@@ -14,6 +16,7 @@ AND length(orderid) = 6
 AND orderid <> 'Order ID';
 
 --3. Select the customer account numbers for all the orders that were placed in February.
+
 SELECT DISTINCT C.acctnum
 FROM customers C
 JOIN FebSales F
@@ -22,6 +25,7 @@ WHERE length(orderid) = 6
 AND orderid <> 'Order ID';
 
 --4. Which product was the cheapest one sold in January, and what was the price?
+
 SELECT DISTINCT product, min(price)
 FROM JanSales
 GROUP BY product
@@ -29,12 +33,14 @@ HAVING length(orderid) = 6
 AND orderid <> 'Order ID';
 
 --5.What is the total revenue for each product sold in January?
+
 SELECT SUM(quantity)*price as Revenue
 ,product
 FROM JanSales
 GROUP BY product;
 
 --6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+
 SELECT
 sum(Quantity), location,
 product,
@@ -44,6 +50,7 @@ WHERE location = '548 Lincoln St, Seattle, WA 98101'
 GROUP BY product;
 
 --7. How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+
 SELECT count(distinct C.acctnum),avg(F.price * F.Quantity)
 FROM FebSales F
 LEFT JOIN customers C
@@ -52,11 +59,66 @@ WHERE F.Quantity >2 AND length(orderid) = 6
 AND orderid <> 'Order ID';
 
 --8. find the total quantity of product sold in february 18th.
+
 SELECT sum(quantity)
 FROM BIT_DB.FebSales
 WHERE orderdate like '02/18/19%';
 
 --9. find the total quantity of product sold from 02/13/19 to 02/18/19.
+
 SELECT orderdate
 FROM BIT_DB.FebSales
 WHERE orderdate between '02/13/19 00:00' AND '02/18/19 00:00';
+
+--10.. How many of each type of headphone were sold in February?
+
+SELECT SUM(Quantity), Product
+FROM BIT_DB.FebSales
+WHERE Product LIKE '%Headphones%'
+AND length(orderid) = 6
+AND orderid <> 'Order ID'
+GROUP BY Product
+
+--11. What was the average amount spent per account in February?
+
+SELECT avg(quantity*price)
+FROM BIT_DB.FebSales Feb
+LEFT JOIN BIT_DB.customers cust
+ON FEB.orderid=cust.order_id
+WHERE length(orderid) = 6
+AND orderid <> 'Order ID'
+
+--12.Find order ids from Georgia (GA) where the order has an average price greater than $1,000. 
+--Only find orders from dates beginning with ‘04/1’. Assume that the dates are stored in the MM/DD/YY HH:MM format.
+--select * from AprSales
+
+SELECT orderID
+FROM BIT_DB.AprSales
+WHERE orderdate LIKE '04/1%'
+AND location LIKE '%GA%'
+AND length(orderid) = 6
+AND orderid <> 'Order ID'
+GROUP BY orderID
+HAVING AVG(price) > 1000;
+
+--13. You’ve been given the following results from the MaySales table. Can you reverse engineer a SQL query that returns these results?
+--The result set will naturally only return 10 rows (i.e., you will not have to use LIMIT to get to 10 results).
+
+SELECT location, orderID
+FROM MaySales
+WHERE orderID LIKE '%1943_5'
+AND length(orderid) = 6
+AND orderid <> 'Order ID'
+ORDER BY orderID;
+
+--14.Which product brought in the most revenue in January and how much revenue did it bring in total?
+--In other words, show the one product that generated the most revenue (revenue being equivalent to quantity of an item multiplied by the item’s price).
+
+SELECT Product , SUM(Quantity *Price) AS Max_rev
+FROM JanSales
+WHERE length(orderid) = 6
+AND orderid <> 'Order ID'
+GROUP BY Product
+HAVING SUM(Quantity *Price)
+ORDER BY SUM(Quantity *Price) DESC
+LIMIT 1;

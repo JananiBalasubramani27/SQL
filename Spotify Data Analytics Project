@@ -1,0 +1,73 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL.
+
+--1. Find top 10 songs by populartity
+
+SELECT track_name AS song,artist_name, popularity
+FROM spotifydata
+ORDER BY popularity desc
+LIMIT 10;
+
+--2.Top artists by average popularity 
+
+SELECT artist_name, ROUND(avg(popularity), 2) AS avg_popularity, count(*) AS track_number
+FROM spotifydata
+GROUP BY artist_name
+HAVING count(*)>1
+ORDER BY ROUND(avg(popularity), 2) DESC
+LIMIT 10;
+
+--3.Are danceable songs more popular?
+
+SELECT ROUND(AVG(popularity),2), ROUND(AVG(danceability),2)
+FROM spotifydata;
+then compare,
+SELECT ROUND(AVG(popularity), 2) AS avg_popularity_high_dance
+FROM spotifydata
+WHERE danceability > 0.7;
+
+--4.Mood vs popularity (valence)
+
+SELECT ROUND(AVG(popularity), 2) AS avg_popularity,
+    CASE 
+    WHEN valence >= 0.6 
+    THEN 'Happy'
+    ELSE 'Sad/Neutral'
+    END AS mood
+FROM spotifydata
+GROUP BY mood;
+
+--5.Which artists have released the most songs in this dataset?
+
+SELECT artist_name, count(track_name) AS track_count
+FROM spotifydata
+GROUP BY artist_name
+HAVING track_count>2
+ORDER BY track_count DESC;

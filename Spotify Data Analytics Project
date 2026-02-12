@@ -46,12 +46,18 @@ LIMIT 10;
 
 --3.Are danceable songs more popular?
 
-SELECT ROUND(AVG(popularity),2), ROUND(AVG(danceability),2)
-FROM spotifydata;
-then compare,
-SELECT ROUND(AVG(popularity), 2) AS avg_popularity_high_dance
+SELECT 
+    CASE WHEN danceability > 0.8 
+    THEN 'danceable'
+    ELSE 'Non_danceable' 
+    END AS category
+    ,ROUND(AVG(popularity),2) AS popularity
 FROM spotifydata
-WHERE danceability > 0.7;
+GROUP BY category;
+
+INSIGHT: 
+There is no significant difference in popularity between danceable and non-danceable songs. 
+Non-danceable songs have a slightly higher average popularity (86.86 vs 86), indicating that danceability alone does not strongly influence popularity.
 
 --4.Mood vs popularity (valence)
 
@@ -71,3 +77,26 @@ FROM spotifydata
 GROUP BY artist_name
 HAVING track_count>2
 ORDER BY track_count DESC;
+
+--6.What is the average duration of popular songs and non-popular songs
+--Compare average duration of popular vs non-popular songs
+
+SELECT 
+    CASE
+    WHEN popularity >'86' 
+    THEN 'Popular'
+    ELSE 'Non-popular' 
+    END AS Category 
+    ,ROUND(AVG(duration_ms)/60000, 2) AS avg_duration_min
+FROM spotifydata
+GROUP BY Category;
+
+--7.What's the average danceability for the 10 most popular songs?
+
+SELECT ROUND(AVG(danceability), 2) AS avg_danceability
+FROM (
+    SELECT danceability
+    FROM spotifydata
+    ORDER BY popularity DESC
+    LIMIT 10
+) AS top10;

@@ -133,51 +133,55 @@ QUERIES:
 6. Find the number of VIPs associated with each event, ordered by event count.
 
 ANSWERS:
-1.Which VIPs are delivering a lecture or session, and which other VIPs are attending or receiving feedback from them?
-SELECT V. last_name AS Lecturer , v1. last_name AS Attendee
+-- 1. VIP presenters and the VIPs who receive feedback from them
+SELECT 
+    V.first_name || ' ' || V.last_name AS Presenter,
+    V1.first_name || ' ' || V1.last_name AS Attendee
 FROM vips V
-left JOIN vips V1
-ON V. member_id= V1. provides_feedback_to
-
-2. Which VIPs have confirmed attendance for both the welcome party and the thank-you dinner?
-SELECT V. first_name AS VIP_firstname, V. last_name AS VIP_lastname
+LEFT JOIN vips V1
+    ON V.member_id = V1.provides_feedback_to;
+-- 2. VIPs attending both welcome party and dinner
+SELECT 
+    V.first_name || ' ' || V.last_name AS VIP_Name
 FROM vips V
 JOIN reservations R
-ON V.member_id = R.member_id
+    ON V.member_id = R.member_id
 WHERE R.welcome_rsvp = 1
-AND R.dinner_rsvp = 1;
-
-3. Which hotels have been booked by each VIP for the conference?
-SELECT V. first_name AS VIP_firstname, V. last_name AS VIP_lastname, H. hotel_name 
+  AND R.dinner_rsvp = 1;
+-- 3. Hotel booked by each VIP
+SELECT 
+    V.first_name || ' ' || V.last_name AS VIP_Name,
+    H.hotel_name
 FROM vips V
 JOIN reservations R
-ON V. member_id= R. member_id
+    ON V.member_id = R.member_id
 JOIN hotels H
-ON R. hotel = H. hotel_id;
-4. List VIP presenters and the events they are conducting, filtered by association type (Education).
-
-SELECT V. first_name AS VIP_PRESENTING, E. event_name, V. assoc_type
+    ON R.hotel = H.hotel_id;
+-- 4. VIP presenters by association type (example: education)
+SELECT 
+    V.first_name || ' ' || V.last_name AS VIP_Name,
+    E.event_name,
+    V.assoc_type
 FROM vips V
 JOIN events E
-ON V. event= E. event_id
-WHERE V. assoc_type= 'education';
-
-5. Find the number of VIPs attending each event, ordered by event attendance.
-SELECT V.first_name AS VIP_Name, H.hotel_name
-FROM vips V
-JOIN reservations R
-ON V.member_id= R.member_id
-JOIN hotels H
-ON R.hotel= H.hotel_id
-WHERE R.hotel= (SELECT hotel
-                FROM reservations
-                GROUP BY hotel
-                ORDER BY COUNT(*) ASC
-                LIMIT 1);
-6. Find the number of VIPs associated with each event, ordered by event count.
-SELECT COUNT(V.member_id) AS VIP_presenting, event_name
+    ON V.event = E.event_id
+WHERE V.assoc_type = 'education';
+-- 5. Number of VIPs attending each event 
+SELECT 
+    E.event_name,
+    COUNT(V.member_id) AS total_vips
 FROM vips V
 JOIN events E
-ON V.event= E.event_id
-GROUP BY event_name
-ORDER BY COUNT(V.member_id) ASC;
+    ON V.event = E.event_id
+GROUP BY E.event_name
+ORDER BY total_vips DESC;
+-- 6. Number of VIPs associated with each event 
+SELECT 
+    E.event_name,
+    COUNT(V.member_id) AS total_vips
+FROM vips V
+JOIN events E
+    ON V.event = E.event_id
+GROUP BY E.event_name
+ORDER BY total_vips DESC;
+
